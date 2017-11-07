@@ -18,54 +18,6 @@ package templates2
 
 import templates.*
 
-private val rangePrimitives = listOf(PrimitiveType.Int, PrimitiveType.Long, PrimitiveType.Char)
-private fun rangeElementType(fromType: PrimitiveType, toType: PrimitiveType)
-        = PrimitiveType.maxByCapacity(fromType, toType).let { if (it == PrimitiveType.Char) it else PrimitiveType.maxByCapacity(it, PrimitiveType.Int) }
-
-private fun <T> Collection<T>.permutations(): List<Pair<T, T>> = flatMap { a -> map { b -> a to b } }
-private val numericPrimitives = PrimitiveType.numericPrimitives
-private val numericPermutations = numericPrimitives.permutations()
-private val primitivePermutations = numericPermutations + (PrimitiveType.Char to PrimitiveType.Char)
-private val integralPermutations = primitivePermutations.filter { it.first.isIntegral() && it.second.isIntegral() }
-
-
-val f_downTo = fn("downTo(to: Primitive)").byTwoPrimitives {
-    include(Family.Primitives, integralPermutations)
-
-    builderWith { (fromType, toType) ->
-        sourceFile(SourceFile.Ranges)
-
-        val elementType = rangeElementType(fromType, toType)
-        val progressionType = elementType.name + "Progression"
-
-        infix()
-        signature("downTo(to: $toType)")
-        returns(progressionType)
-
-        doc {
-            """
-            Returns a progression from this value down to the specified [to] value with the step -1.
-
-            The [to] value has to be less than this value.
-            """
-        }
-
-
-        val fromExpr = if (elementType == fromType) "this" else "this.to$elementType()"
-        val toExpr = if (elementType == toType) "to" else "to.to$elementType()"
-        val incrementExpr = when (elementType) {
-            PrimitiveType.Long -> "-1L"
-            PrimitiveType.Float -> "-1.0F"
-            PrimitiveType.Double -> "-1.0"
-            else -> "-1"
-        }
-
-        body {
-            "return $progressionType.fromClosedRange($fromExpr, $toExpr, $incrementExpr)"
-        }
-    }
-}
-
 
 object Arrays : TemplateGroupBase() {
     val f_sort_range = fn("sort(fromIndex: Int = 0, toIndex: Int = size)") {
