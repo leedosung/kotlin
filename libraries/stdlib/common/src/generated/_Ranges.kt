@@ -571,13 +571,6 @@ public expect fun Double.coerceAtMost(maximumValue: Double): Double
  * 
  * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
  */
-public expect fun <T: Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T
-
-/**
- * Ensures that this value lies in the specified range [minimumValue]..[maximumValue].
- * 
- * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
- */
 public expect fun Byte.coerceIn(minimumValue: Byte, maximumValue: Byte): Byte
 
 /**
@@ -614,6 +607,13 @@ public expect fun Float.coerceIn(minimumValue: Float, maximumValue: Float): Floa
  * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
  */
 public expect fun Double.coerceIn(minimumValue: Double, maximumValue: Double): Double
+
+/**
+ * Ensures that this value lies in the specified range [minimumValue]..[maximumValue].
+ * 
+ * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
+ */
+public expect fun <T: Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T
 
 /**
  * Ensures that this value lies in the specified [range].

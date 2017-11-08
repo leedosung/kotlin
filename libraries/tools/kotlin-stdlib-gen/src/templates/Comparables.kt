@@ -289,11 +289,12 @@ fun comparables(): List<GenericFunction> {
     }
 
 
-    templates add f("coerceIn(minimumValue: SELF, maximumValue: SELF)") {
+    templates addAll listOf(Primitives, Generic).map { f ->
+        val selfType = if (f == Generic) "SELF?" else "SELF"
+    f("coerceIn(minimumValue: $selfType, maximumValue: $selfType)") {
         sourceFile(SourceFile.Ranges)
-        only(Primitives, Generic)
-        only(numericPrimitives)
-        customSignature(Generic) { "coerceIn(minimumValue: SELF?, maximumValue: SELF?)" }
+        only(f)
+        if (f == Primitives) only(numericPrimitives)
         typeParam("T: Comparable<T>")
         returns("SELF")
         doc {
@@ -303,7 +304,8 @@ fun comparables(): List<GenericFunction> {
             @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
             """
         }
-        body(Primitives) {
+        if (f == Primitives)
+        body {
             """
             if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum ${'$'}maximumValue is less than minimum ${'$'}minimumValue.")
             if (this < minimumValue) return minimumValue
@@ -311,7 +313,8 @@ fun comparables(): List<GenericFunction> {
             return this
             """
         }
-        body(Generic) {
+        if (f == Generic)
+        body {
             """
             if (minimumValue !== null && maximumValue !== null) {
                 if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum ${'$'}maximumValue is less than minimum ${'$'}minimumValue.")
@@ -325,7 +328,7 @@ fun comparables(): List<GenericFunction> {
             return this
             """
         }
-    }
+    }}
 
     return templates
 }

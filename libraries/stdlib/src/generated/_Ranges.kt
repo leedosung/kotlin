@@ -779,24 +779,6 @@ public fun Double.coerceAtMost(maximumValue: Double): Double {
  * 
  * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
  */
-public fun <T: Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T {
-    if (minimumValue !== null && maximumValue !== null) {
-        if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
-        if (this < minimumValue) return minimumValue
-        if (this > maximumValue) return maximumValue
-    }
-    else {
-        if (minimumValue !== null && this < minimumValue) return minimumValue
-        if (maximumValue !== null && this > maximumValue) return maximumValue
-    }
-    return this
-}
-
-/**
- * Ensures that this value lies in the specified range [minimumValue]..[maximumValue].
- * 
- * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
- */
 public fun Byte.coerceIn(minimumValue: Byte, maximumValue: Byte): Byte {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -861,6 +843,24 @@ public fun Double.coerceIn(minimumValue: Double, maximumValue: Double): Double {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
     if (this > maximumValue) return maximumValue
+    return this
+}
+
+/**
+ * Ensures that this value lies in the specified range [minimumValue]..[maximumValue].
+ * 
+ * @return this value if it's in the range, or [minimumValue] if this value is less than [minimumValue], or [maximumValue] if this value is greater than [maximumValue].
+ */
+public fun <T: Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T {
+    if (minimumValue !== null && maximumValue !== null) {
+        if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
+        if (this < minimumValue) return minimumValue
+        if (this > maximumValue) return maximumValue
+    }
+    else {
+        if (minimumValue !== null && this < minimumValue) return minimumValue
+        if (maximumValue !== null && this > maximumValue) return maximumValue
+    }
     return this
 }
 
