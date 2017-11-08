@@ -883,25 +883,6 @@ object Generators : TemplateGroupBase() {
         body(CharSequences) { "return chunkedSequence(size) { it.toString() }" }
     }
 
-    val f_pairwise_transform = fn("pairwise(transform: (a: T, b: T) -> R)") {
-        include(Iterables, Sequences, CharSequences)
-    } builder {
-        deprecate(Deprecation("Use zipWithNext instead", "zipWithNext(transform)"))
-        since("1.2")
-        typeParam("R")
-        returns("List<R>")
-        inline()
-        body {
-            """
-            return zipWithNext(transform)
-            """
-        }
-        specialFor(Sequences) {
-            inline(Inline.No)
-            returns("Sequence<R>")
-        }
-    }
-
     val f_zipWithNext_transform = fn("zipWithNext(transform: (a: T, b: T) -> R)") {
         include(Iterables, Sequences, CharSequences)
     } builder {
@@ -962,18 +943,6 @@ object Generators : TemplateGroupBase() {
                 }
             }
             """
-        }
-    }
-
-    val f_pairwise = fn("pairwise()") {
-        include(Iterables, Sequences, CharSequences)
-    } builder {
-        deprecate(Deprecation("Use zipWithNext instead", "zipWithNext()"))
-        since("1.2")
-        returns("List<Pair<T, T>>")
-        specialFor(Sequences) { returns("Sequence<Pair<T, T>>") }
-        body {
-            "return zipWithNext { a, b -> a to b }"
         }
     }
 
